@@ -57,7 +57,16 @@ export function MarketingHeader() {
         </nav>
 
         {/* Desktop CTA */}
-        <div className="hidden xl:block">
+        <div className="hidden xl:flex items-center gap-3">
+          <Link
+            href="/login"
+            className={cn(
+              'text-sm font-medium transition-colors',
+              scrolled ? 'text-muted-foreground hover:text-foreground' : 'text-white/80 hover:text-white'
+            )}
+          >
+            Log In
+          </Link>
           <a href="#quote">
             <Button
               variant={scrolled ? 'default' : 'outline'}
@@ -95,7 +104,10 @@ export function MarketingHeader() {
                     {link.label}
                   </a>
                 ))}
-                <div className="pt-4 px-3">
+                <div className="pt-4 px-3 space-y-2">
+                  <Link href="/login" onClick={() => setOpen(false)}>
+                    <Button variant="outline" className="w-full">Log In</Button>
+                  </Link>
                   <a href="#quote" onClick={() => setOpen(false)}>
                     <Button className="w-full">Get a Quote</Button>
                   </a>
