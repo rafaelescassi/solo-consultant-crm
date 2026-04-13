@@ -29,25 +29,68 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  // Protected routes - redirect to login if not authenticated
-  if (!user && (path.startsWith('/dashboard') || path.startsWith('/leads') || path.startsWith('/clients') || path.startsWith('/invoices') || path.startsWith('/settings'))) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    return NextResponse.redirect(url);
+  // ── Public routes — no auth check ──
+  // Landing page at / and /auth/callback are public
+  if (path === '/' || path === '/auth/callback') {
+    return supabaseResponse;
   }
 
-  // Auth routes - redirect to dashboard if already authenticated
+  // ── Auth routes — redirect if already authenticated ──
   if (user && (path === '/login' || path === '/signup' || path === '/forgot-password')) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
     const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
+    url.pathname = profile?.role === 'client' ? '/portal' : '/dashboard';
     return NextResponse.redirect(url);
   }
 
-  // Root redirect
-  if (path === '/') {
-    const url = request.nextUrl.clone();
-    url.pathname = user ? '/dashboard' : '/login';
-    return NextResponse.redirect(url);
+  // ── Protected: Dashboard / Admin routes — require admin role ──
+  const adminRoutes = ['/dashboard', '/leads', '/clients', '/invoices', '/settings', '/projects'];
+  const isAdminRoute = adminRoutes.some(r => path === r || path.startsWith(r + '/'));
+
+  if (isAdminRoute) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      return NextResponse.redirect(url);
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (profile?.role === 'client') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/portal';
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // ── Protected: Portal routes — require client role ──
+  if (path === '/portal' || path.startsWith('/portal/')) {
+    if (!user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/login';
+      return NextResponse.redirect(url);
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (profile?.role !== 'client') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/dashboard';
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;

@@ -135,6 +135,11 @@
   --sidebar-ring: hsl(217 91% 60%);
 }
 
+.hero-pattern {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

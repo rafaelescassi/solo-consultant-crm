@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { Users, FileText, AlertTriangle, TrendingUp } from 'lucide-react';
+import { Users, FileText, AlertTriangle, TrendingUp, FolderKanban, Rocket, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MetricsCardsProps {
@@ -9,14 +9,20 @@ interface MetricsCardsProps {
   openInvoices: number;
   overdueInvoices: number;
   conversionRate: number;
+  activeProjects?: number;
+  inProgressProjects?: number;
+  completedProjects?: number;
 }
 
-export function MetricsCards({ activeClients, openInvoices, overdueInvoices, conversionRate }: MetricsCardsProps) {
+export function MetricsCards({ activeClients, openInvoices, overdueInvoices, conversionRate, activeProjects = 0, inProgressProjects = 0, completedProjects = 0 }: MetricsCardsProps) {
   const cards = [
     { label: 'Active Clients', value: activeClients, icon: Users, accent: false },
     { label: 'Open Invoices', value: openInvoices, icon: FileText, accent: false },
     { label: 'Overdue Invoices', value: overdueInvoices, icon: AlertTriangle, accent: overdueInvoices > 0 },
     { label: 'Conversion Rate', value: `${conversionRate}%`, icon: TrendingUp, accent: false },
+    { label: 'Active Projects', value: activeProjects, icon: FolderKanban, accent: false },
+    { label: 'In Progress', value: inProgressProjects, icon: Rocket, accent: false },
+    { label: 'Completed Projects', value: completedProjects, icon: CheckCircle, accent: false },
   ];
 
   return (

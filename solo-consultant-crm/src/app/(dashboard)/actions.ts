@@ -22,13 +22,14 @@ export async function getDashboardMetrics(period?: string): Promise<DashboardMet
     startDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
   }
 
-  // Parallel queries
-  const [invoicesRes, clientsRes, leadsRes, activityRes, yearInvoicesRes] = await Promise.all([
+  // Parallel queries (including new project queries)
+  const [invoicesRes, clientsRes, leadsRes, activityRes, yearInvoicesRes, projectsRes] = await Promise.all([
     supabase.from('invoices').select('total, status').gte('issue_date', startDate),
     supabase.from('clients').select('id').eq('is_archived', false),
     supabase.from('leads').select('stage, estimated_value'),
     supabase.from('activity_log').select('*').order('created_at', { ascending: false }).limit(20),
     supabase.from('invoices').select('total, status, issue_date').eq('status', 'paid').gte('issue_date', `${now.getFullYear()}-01-01`),
+    supabase.from('projects').select('status'),
   ]);
 
   const invoices = invoicesRes.data || [];
@@ -36,6 +37,7 @@ export async function getDashboardMetrics(period?: string): Promise<DashboardMet
   const leads = leadsRes.data || [];
   const activity = activityRes.data || [];
   const yearInvoices = yearInvoicesRes.data || [];
+  const projects = projectsRes.data || [];
 
   const totalInvoiced = invoices.reduce((sum, inv) => sum + Number(inv.total), 0);
   const totalPaid = invoices.filter(i => i.status === 'paid').reduce((sum, inv) => sum + Number(inv.total), 0);
@@ -69,6 +71,10 @@ export async function getDashboardMetrics(period?: string): Promise<DashboardMet
     };
   });
 
+  // Project metrics
+  const activeStatuses = ['approved', 'in_progress', 'review'];
+  const completedStatuses = ['completed', 'delivered'];
+
   return {
     total_invoiced: totalInvoiced,
     total_paid: totalPaid,
@@ -80,5 +86,8 @@ export async function getDashboardMetrics(period?: string): Promise<DashboardMet
     pipeline_by_stage: pipelineByStage,
     recent_activity: activity,
     monthly_revenue: monthlyRevenue,
+    active_projects: projects.filter(p => activeStatuses.includes(p.status)).length,
+    completed_projects: projects.filter(p => completedStatuses.includes(p.status)).length,
+    in_progress_projects: projects.filter(p => p.status === 'in_progress').length,
   };
 }

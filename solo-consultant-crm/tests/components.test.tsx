@@ -221,7 +221,7 @@ describe('MetricsCards', () => {
         conversionRate={0}
       />
     );
-    expect(screen.getAllByText('0')).toHaveLength(3);
+    expect(screen.getAllByText('0')).toHaveLength(6);
     expect(screen.getByText('0%')).toBeInTheDocument();
   });
 });

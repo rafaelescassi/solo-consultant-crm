@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Target, Users, FileText, Settings } from 'lucide-react';
+import { LayoutDashboard, Target, FolderKanban, Users, FileText, Settings, Zap } from 'lucide-react';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/leads', label: 'Pipeline', icon: Target },
+  { href: '/projects', label: 'Projects', icon: FolderKanban },
   { href: '/clients', label: 'Clients', icon: Users },
   { href: '/invoices', label: 'Invoices', icon: FileText },
 ];
@@ -19,8 +20,9 @@ export function Sidebar() {
     <aside className="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0 border-r border-border bg-card">
       {/* Logo */}
       <div className="h-16 flex items-center px-6 border-b border-border">
-        <Link href="/dashboard" className="text-lg font-semibold text-primary">
-          ConsultCRM
+        <Link href="/dashboard" className="flex items-center gap-2 text-lg font-semibold text-primary">
+          <Zap className="h-5 w-5" />
+          AI Dev Squad
         </Link>
       </div>
 

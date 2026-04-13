@@ -1,4 +1,4 @@
-import { Target, Users, FileText, Send, DollarSign, AlertTriangle, Archive, PenLine, type LucideIcon } from 'lucide-react';
+import { Target, Users, FileText, Send, DollarSign, AlertTriangle, Archive, PenLine, FolderKanban, Rocket, CheckCircle, Package, XCircle, type LucideIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DateDisplay } from '@/components/shared/date-display';
 import type { ActivityLogEntry, ActivityType } from '@/lib/types';
@@ -18,6 +18,12 @@ const ACTIVITY_ICONS: Record<ActivityType, LucideIcon> = {
   invoice_sent: Send,
   invoice_paid: DollarSign,
   invoice_overdue: AlertTriangle,
+  project_created: FolderKanban,
+  project_started: Rocket,
+  project_phase_updated: PenLine,
+  project_completed: CheckCircle,
+  project_delivered: Package,
+  project_cancelled: XCircle,
 };
 
 const ACTIVITY_COLORS: Record<ActivityType, string> = {
@@ -31,6 +37,12 @@ const ACTIVITY_COLORS: Record<ActivityType, string> = {
   invoice_sent: 'text-blue-500',
   invoice_paid: 'text-green-500',
   invoice_overdue: 'text-amber-500',
+  project_created: 'text-violet-500',
+  project_started: 'text-blue-500',
+  project_phase_updated: 'text-violet-500',
+  project_completed: 'text-green-500',
+  project_delivered: 'text-emerald-500',
+  project_cancelled: 'text-red-500',
 };
 
 export function ActivityFeed({ activities }: ActivityFeedProps) {

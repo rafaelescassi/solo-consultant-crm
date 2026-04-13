@@ -6,11 +6,12 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { LayoutDashboard, Target, Users, FileText, Settings, Menu } from 'lucide-react';
+import { LayoutDashboard, Target, FolderKanban, Users, FileText, Settings, Menu, Zap } from 'lucide-react';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/leads', label: 'Pipeline', icon: Target },
+  { href: '/projects', label: 'Projects', icon: FolderKanban },
   { href: '/clients', label: 'Clients', icon: Users },
   { href: '/invoices', label: 'Invoices', icon: FileText },
   { href: '/settings', label: 'Settings', icon: Settings },
@@ -28,7 +29,10 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="w-72 p-0">
         <div className="h-16 flex items-center px-6 border-b border-border">
-          <span className="text-lg font-semibold text-primary">ConsultCRM</span>
+          <span className="flex items-center gap-2 text-lg font-semibold text-primary">
+            <Zap className="h-5 w-5" />
+            AI Dev Squad
+          </span>
         </div>
         <nav className="px-3 py-4 space-y-1">
           {navItems.map(item => {

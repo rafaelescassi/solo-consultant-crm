@@ -29,6 +29,9 @@ async function DashboardContent() {
         openInvoices={metrics.open_invoices}
         overdueInvoices={metrics.overdue_invoices}
         conversionRate={metrics.conversion_rate}
+        activeProjects={metrics.active_projects}
+        inProgressProjects={metrics.in_progress_projects}
+        completedProjects={metrics.completed_projects}
       />
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
